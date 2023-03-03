@@ -47,7 +47,6 @@ void addTask(){
             std::cout << "Enter new task: ";
             std::cin.ignore(); 
             std::getline(std::cin,taskName);
-            std::cout << "You enter:" << taskName << std::endl;
 
             tasksFile << taskName << "\n";
             tasksFile.close();
