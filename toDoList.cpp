@@ -16,7 +16,8 @@ std::vector<unsigned int> options {1,2,3,4,5};
 std::vector<unsigned int>::iterator it;
 
 unsigned int taskID;
-// const std::string taskFileName = "tasks.txt"; //solve problem !
+std::string taskFileName = "tasks.txt", idFileName = "id.txt";
+
 const std::string mainMenuOptions = "Welcome to toDoList v0.1\n"
 "1. Add task\n"
 "2. Read task(s)\n"
@@ -27,30 +28,28 @@ const std::string mainMenuOptions = "Welcome to toDoList v0.1\n"
 
 bool actionDone(){
     std::cout << "Done? If so, type 'y' or 'Y':" << std::endl;
-    char done;
-    std::cin >> done;
-    if(done != 'y' && done != 'Y'){
-        return true;
-    }
-    else{
-        return false;
-    }
+    char userInput;
+    std::cin >> userInput;
+    return (userInput != 'y' && userInput != 'Y');
 }
 
 void addTask(){
     char repeat;
     do
-    {
+    {   
         std::string taskName;
         system("cls");
-        std::cout << "Adding task\n\n";
-        std::cout << " Enter new task: ";
-        std::cin >> taskName;
-
-        std::fstream tasksFile;
-        tasksFile.open("tasks.txt",std::fstream::out | std::fstream::app);
+        std::fstream tasksFile, idFile;
+        tasksFile.open(taskFileName,std::fstream::out | std::fstream::app);
         if(tasksFile.is_open()){
-            tasksFile << taskName << "\n";
+            //char taskName[100] = {0};
+    
+            std::cout << "Adding task\n" << std::endl;
+            std::cout << "Enter new task: ";
+            std::getline(std::cin,taskName);
+            std::cout << "You enter:" << taskName << std::endl;
+
+            //tasksFile << taskName << "\n";
             tasksFile.close();
         }
         else{
@@ -59,8 +58,7 @@ void addTask(){
 
         taskID++;
 
-        std::fstream idFile;
-        idFile.open("id.txt",std::fstream::out | std::fstream::app);
+        idFile.open(idFileName,std::fstream::out | std::fstream::app);
         if(idFile.is_open()){
             idFile << taskID << "\n" ;
             idFile.close();
@@ -68,10 +66,10 @@ void addTask(){
         else{
             std::cout << "ERROR::addTask::idFile::IS_NOT_OPEN" << std::endl;
         }
+
         std::cout << "\nTask added succesfully!\n Add next task?\n If so, type 'y' or 'Y': \t";
         std::cin >> repeat;
     } while (repeat == 'y' || repeat == 'Y');
-    
 }
 
 void showTasks(){
@@ -80,8 +78,8 @@ void showTasks(){
 
     std::string idFileLine, tasksFileLine;
     std::fstream idFile, tasksFile;
-    idFile.open("id.txt", std::fstream::in);
-    tasksFile.open("tasks.txt", std::fstream::in);
+    idFile.open(idFileName, std::fstream::in);
+    tasksFile.open(taskFileName, std::fstream::in);
 
     if(idFile.good() && tasksFile.good()){
         while (idFile.peek() != EOF && tasksFile.peek() != EOF)
@@ -99,7 +97,7 @@ void showTasks(){
 }
 
 void editTask(){
-    int taskToDel;
+    int taskToEdit;
     int iter = 0;
     std::string newTask;
 
@@ -109,33 +107,37 @@ void editTask(){
     showTasks();
 
     std::cout << "Type num. of task to edit.: ";
-    std::cin >> taskToDel;
+    std::cin >> taskToEdit;
 
-    if(taskToDel > 0 || taskToDel <= taskID){
-        std::fstream taskFile, taskFileTemp;
+    if(taskToEdit > 0 || taskToEdit <= taskID){
+
         std::string line;
-        taskFile.open("tasks.txt",std::fstream::in);
+        std::fstream tasksFile, taskFileTemp;
+        tasksFile.open(taskFileName,std::fstream::in);
         taskFileTemp.open("tasksTemp.txt",std::fstream::out);
-        if(taskFile.good() && taskFileTemp.good()){
-            while (taskFile.peek() != EOF)
+        if(tasksFile.good() && taskFileTemp.good()){
+            while (tasksFile.peek() != EOF)
             {   
                 iter++;
-                std::getline(taskFile,line);
+                std::getline(tasksFile,line);
 
-                if(iter != taskToDel){
+                if(iter != taskToEdit){
                     taskFileTemp << line << "\n";
                 }
                 else{
-                    std::cout << "Task you picked: \n" << taskToDel << "\t" << line << std::endl;
+                    std::cout << "Task you picked: \n" << taskToEdit << "\t" << line << std::endl;
                     std::cout << "Enter new name of task: ";
                     std::getline(std::cin, newTask);
                     taskFileTemp << newTask << "\n";
                 }
             }
         }
+        else{
+            std::cout << "ERROT::editTask::FILE_IS_NOT_OPEN\n";
+        }
         std::cout<< "INFO::Task edited succesfully";
 
-        taskFile.close();
+        tasksFile.close();
         taskFileTemp.close();
 
         std::remove("tasks.txt");
@@ -145,7 +147,7 @@ void editTask(){
     else{
         std::cout << "INFO::Task num. out of bound!\n";
     }
-    system("cls");
+    //system("cls");
 }
 
 void removeTask(){
@@ -157,7 +159,7 @@ void removeTask(){
 
 void idCheck(){
     std::fstream idFile;
-    idFile.open("id.txt",std::fstream::in);
+    idFile.open(idFileName,std::fstream::in);
 
     std::string line;
     unsigned int lineCount = 0;
@@ -178,11 +180,8 @@ void idCheck(){
 int main(){
     system("cls");
     idCheck();
-    // char check[100];
-    // std::cin.getline(check,100);
-    // std::cout << check;
+
     do{
-        //Var to choose option
         int choice;
 
         std::cout << mainMenuOptions;
@@ -190,34 +189,32 @@ int main(){
 
         it = std::find(options.begin(), options.end(), choice);
 
-        if(it != options.end()){
-            switch (choice){
-            case 1:
-                //done
-                addTask();
-                system("cls");
-                break;
-            case 2:
-                //done
-                showTasks();
-                while (actionDone());
-                system("cls");
-                break;
-            case 3:
-                editTask();
-                break;
-            case 4:
-                removeTask();
-                break;
-            case 5:
-                //done
-                std::cout << "Thanks for using this program!!!" << std::endl;
-                return 0;
-                break;
-            }
-        }
-        else{
+        switch (choice){
+        case 1:
+            //done
+            addTask();
+            system("cls");
+            break;
+        case 2:
+            //done
+            showTasks();
+            actionDone();
+            system("cls");
+            break;
+        case 3:
+            editTask();
+            break;
+        case 4:
+            removeTask();
+            break;
+        case 5:
+            //done
+            std::cout << "Thanks for using this program!!!" << std::endl;
+            return 0;
+            break;
+        default:
             std::cout << "Number out of bound!" << std::endl;
+            break;
         }
     }
     while(true);
