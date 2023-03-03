@@ -42,14 +42,14 @@ void addTask(){
         std::fstream tasksFile, idFile;
         tasksFile.open(taskFileName,std::fstream::out | std::fstream::app);
         if(tasksFile.is_open()){
-            //char taskName[100] = {0};
     
             std::cout << "Adding task\n" << std::endl;
             std::cout << "Enter new task: ";
+            std::cin.ignore(); 
             std::getline(std::cin,taskName);
             std::cout << "You enter:" << taskName << std::endl;
 
-            //tasksFile << taskName << "\n";
+            tasksFile << taskName << "\n";
             tasksFile.close();
         }
         else{
@@ -97,57 +97,58 @@ void showTasks(){
 }
 
 void editTask(){
-    int taskToEdit;
-    int iter = 0;
-    std::string newTask;
 
     system("cls");
     std::cout << "Editing task" << std::endl;
-    std::cout << "There is list of tasks. Choose with one you want to edit: \n\n";
-    showTasks();
 
-    std::cout << "Type num. of task to edit.: ";
-    std::cin >> taskToEdit;
+    std::fstream tasksFile, taskFileTemp;
+    tasksFile.open(taskFileName,std::fstream::in);
+    taskFileTemp.open("tasksTemp.txt",std::fstream::out);
+    if(tasksFile.good() && taskFileTemp.good()){
 
-    if(taskToEdit > 0 || taskToEdit <= taskID){
+        int taskToEdit, iter = 0;
 
-        std::string line;
-        std::fstream tasksFile, taskFileTemp;
-        tasksFile.open(taskFileName,std::fstream::in);
-        taskFileTemp.open("tasksTemp.txt",std::fstream::out);
-        if(tasksFile.good() && taskFileTemp.good()){
+        std::cout << "There is list of tasks. Choose with one you want to edit: \n\n";
+        showTasks();
+        std::cout << "Type num. of task to edit.: ";
+        std::cin >> taskToEdit;
+
+        if(taskToEdit > 0 || taskToEdit <= taskID){
             while (tasksFile.peek() != EOF)
             {   
-                iter++;
+                std::string line;
                 std::getline(tasksFile,line);
-
-                if(iter != taskToEdit){
+                iter++;
+                if(iter != taskToEdit)
+                {
                     taskFileTemp << line << "\n";
                 }
-                else{
+                else
+                {
+                    std::string editedTask;
                     std::cout << "Task you picked: \n" << taskToEdit << "\t" << line << std::endl;
                     std::cout << "Enter new name of task: ";
-                    std::getline(std::cin, newTask);
-                    taskFileTemp << newTask << "\n";
+                    std::cin.ignore();
+                    std::getline(std::cin, editedTask);
+                    taskFileTemp << editedTask << "\n";
                 }
             }
         }
         else{
-            std::cout << "ERROT::editTask::FILE_IS_NOT_OPEN\n";
+            std::cout << "INFO::Task num. out of bound!\n";
         }
         std::cout<< "INFO::Task edited succesfully";
-
-        tasksFile.close();
-        taskFileTemp.close();
-
-        std::remove("tasks.txt");
-        std::rename("tasksTemp.txt","tasks.txt");
-        std::remove("tasksTemp.txt");
+        system("cls");
+    }   
+    else
+    {
+        std::cout << "ERROT::editTask::FILE_IS_NOT_OPEN\n";
     }
-    else{
-        std::cout << "INFO::Task num. out of bound!\n";
-    }
-    //system("cls");
+    tasksFile.close();
+    taskFileTemp.close();
+    std::remove("tasks.txt");
+    std::rename("tasksTemp.txt","tasks.txt");
+    std::remove("tasksTemp.txt");
 }
 
 void removeTask(){
@@ -186,7 +187,6 @@ int main(){
 
         std::cout << mainMenuOptions;
         std::cin >> choice;
-
         it = std::find(options.begin(), options.end(), choice);
 
         switch (choice){
@@ -214,7 +214,6 @@ int main(){
             break;
         default:
             std::cout << "Number out of bound!" << std::endl;
-            break;
         }
     }
     while(true);
