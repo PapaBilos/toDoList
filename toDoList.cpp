@@ -16,9 +16,12 @@ std::vector<unsigned int> options {1,2,3,4,5};
 std::vector<unsigned int>::iterator it;
 
 unsigned int taskID;
-std::string taskFileName = "tasks.txt", idFileName = "id.txt";
 
-const std::string mainMenuOptions = "Welcome to toDoList v0.1\n"
+std::string taskFileName = "tasks.txt",
+            taskTempFileName = "tasksTemp.txt",
+            idFileName = "id.txt";
+const std::string version = "v0.5";
+const std::string mainMenuOptions = "Welcome to toDoList "+ version +"\n"
 "1. Add task\n"
 "2. Read task(s)\n"
 "3. Edit task\n"
@@ -102,7 +105,7 @@ void editTask(){
 
     std::fstream tasksFile, taskFileTemp;
     tasksFile.open(taskFileName,std::fstream::in);
-    taskFileTemp.open("tasksTemp.txt",std::fstream::out);
+    taskFileTemp.open(taskTempFileName,std::fstream::out);
     if(tasksFile.good() && taskFileTemp.good()){
 
         int taskToEdit, iter = 0;
@@ -153,8 +156,52 @@ void editTask(){
 void removeTask(){
     system("cls");
     std::cout << "Removing task" << std::endl;
-    std::cout << "There is list of tasks. Choose with one you want to delete: \n\n";
-    showTasks();
+
+    std::fstream tasksFile, taskFileTemp, idFile;
+    tasksFile.open(taskFileName,std::fstream::in);
+    taskFileTemp.open(taskTempFileName,std::fstream::out);
+    idFile.open(idFileName, std::fstream::in);
+    if(tasksFile.good() && taskFileTemp.good() && idFile.good()){
+
+        int taskToRemove, iter = 0;
+
+        std::cout << "There is list of tasks. Choose with one you want to remove: \n\n";
+        showTasks();
+        std::cout << "Type num. of task to remove: ";
+        std::cin >> taskToRemove;
+
+        if(taskToRemove > 0 || taskToRemove <= taskID)
+        {
+            while (tasksFile.peek() != EOF)
+            {   
+                std::string line;
+                std::getline(tasksFile,line);
+                iter++;
+                if(iter != taskToRemove)
+                {
+                    taskFileTemp << line << "\n";
+                }
+            }
+
+            taskID--;
+
+            std::remove("id.txt");
+            for(int i = 1; i <= taskID; i++) idFile << i << "\n";
+        }
+        else{
+            std::cout << "INFO::Task num. out of bound!\n";
+        }
+    }
+    else
+    {
+        std::cout << "ERROT::removeTask::FILE_IS_NOT_OPEN\n";
+    }
+    tasksFile.close();
+    taskFileTemp.close();
+    idFile.close();
+    std::remove("tasks.txt");
+    std::rename("tasksTemp.txt","tasks.txt");
+    std::remove("tasksTemp.txt");
 }
 
 void idCheck(){
