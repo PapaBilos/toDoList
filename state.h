@@ -2,15 +2,23 @@
 
 #include <map>
 #include <functional>
+#include "mainMenu.h"
+
+//#include "askMenuOption.h"
+//#include "addTask.h"
+// #include "editTask.h"
+// #include "removeTask.h"
+// #include "terminate.h"
 
 enum class PossibleState {
+
     mainMenu,
-    askMenuOtion,
-    repeat,
+    askMenuOption,
+    //repeat, //think and add later
     addTask,
     editTask,
     removeTask,
-    shutdown
+    terminate
 };
 
 class State {
@@ -20,30 +28,6 @@ public:
 
     virtual void execute() = 0;
     virtual PossibleState leave() = 0;
-};
-
-class MainMenu : public State {
-public:
-    //MainMenu();
-    int i;
-    void execute() override;
-    PossibleState leave() override;
-    
-};
-
-class AddTask : public State {
-public:
-    //AddTask();
-
-    void execute() override;
-    PossibleState leave() override;
-};
-
-class AskMenuOption : public State {
-    public:
-
-    void execute() override;
-    PossibleState leave() override;
 };
 
 class StateMachine {
@@ -64,7 +48,12 @@ private:
     State* currentState;
     static State* createMainMenuState(){return new MainMenu();}
     const inline static std::map<PossibleState,std::function<State*()>> stateMap {
-        {PossibleState::mainMenu,createMainMenuState},
-        {PossibleState::addTask,[]{return new AddTask();}},
+        {PossibleState::mainMenu,createMainMenuState}
+        //{PossibleState::askMenuOption,[]{return new AskMenuOption();}},
+        //{PossibleState::addTask,[]{return new AddTask();}}
+        //,
+        // {PossibleState::editTask,[]{return new EditTask();}},
+        // {PossibleState::removeTask,[]{return new RemoveTask();}},
+        // {PossibleState::terminate,[]{return new Terminate();}}
     };
 };
