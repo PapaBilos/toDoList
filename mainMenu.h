@@ -1,4 +1,5 @@
 #pragma once
+
 #include "state.h"
 
 class MainMenu : public State {
@@ -7,4 +8,3 @@ public:
     PossibleState leave() override;
 };
 
-void MainMenu::execute(){};
