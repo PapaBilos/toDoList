@@ -1,7 +1,7 @@
 #pragma once
-#include "state.h"
+#include"state.h"
 
-class ShowTasks : public State {
+class RemoveTask : public State {
 public:
 	void execute() override;
 	PossibleState leave() override;

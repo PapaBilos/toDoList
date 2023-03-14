@@ -4,20 +4,24 @@
 
 #include "askMenuOption.h"
 
-void AskMenuOption::execute() {
+void AskMenuOption::nextStateSelection() {
 	std::cout << "Choose option: ";
-}
-
-PossibleState AskMenuOption::leave() {
 	int inputOption;
 	std::cin >> inputOption;
-
-	PossibleState nextState;
 	std::map<int, PossibleState> nextStateMap{
 		{1, PossibleState::addTask},
 		{2, PossibleState::showTasks},
-		{3, PossibleState::editTask}
+		{3, PossibleState::editTask},
+		{4, PossibleState::removeTask},
+		{5, PossibleState::terminate}
 	};
+	AskMenuOption::nextState = nextStateMap.at(inputOption);
+}
 
-	return nextState = nextStateMap.at(inputOption);
+void AskMenuOption::execute() {
+	AskMenuOption::nextStateSelection();
+}
+
+PossibleState AskMenuOption::leave() {
+	return nextState;
 }
