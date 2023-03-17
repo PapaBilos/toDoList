@@ -1,8 +1,5 @@
-
 #include<iostream>
-#include "state.h"
-//#include "askMenuOption.h"
-//#include "addTask.h"
+#include "stateMachine.h"
 
 int main()
 {
