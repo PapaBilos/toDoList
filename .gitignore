@@ -1,6 +1,10 @@
 .vs
 .vscode
+files
+toDoList
 
+.gitignore
 id.txt
 tasks.txt
 toDoList.exe
+toDoList.cpp

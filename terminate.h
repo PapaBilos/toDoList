@@ -1,8 +1,9 @@
 #pragma once
-#include "state.h"
+#include"state.h"
 
-class ShowTasks : public State {
+class Terminate : public State {
 public:
 	void execute() override;
 	PossibleState leave() override;
+	void shutdown();
 };

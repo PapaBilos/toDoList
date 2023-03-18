@@ -1,6 +1,6 @@
+#include <iostream>
 #include "mainMenu.h"
 #include "state.h"
-#include <iostream>
 
 void MainMenu::execute() {
     const std::string version = "v. UGA_BUGA";
@@ -14,5 +14,5 @@ void MainMenu::execute() {
 }
 
 PossibleState MainMenu::leave() {
-	return PossibleState::askMenuOption;
+     return PossibleState::askMenuOption;
 }
