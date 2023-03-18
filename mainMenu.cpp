@@ -14,5 +14,5 @@ void MainMenu::execute() {
 }
 
 PossibleState MainMenu::leave() {
-	return PossibleState::askMenuOption;
+     return PossibleState::askMenuOption;
 }
