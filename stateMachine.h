@@ -1,13 +1,11 @@
 #pragma once
-#include"state.h"
-#include"mainMenu.h"
-#include"addTask.h"
-#include"askMenuOption.h"
-#include"showTasks.h"
-#include"editTask.h"
-#include"removeTask.h"
-#include"terminate.h"
 
+#include "state.h"
+#include "mainMenu.h"
+#include "addTask.h"
+#include "askMenuOption.h"
+#include "showTasks.h"
+#include "editTask.h"
 class StateMachine {
 public:
     StateMachine(PossibleState initialState) {
@@ -31,8 +29,8 @@ private:
         {PossibleState::addTask,[]{return new AddTask();}},
         {PossibleState::askMenuOption,[] {return new AskMenuOption(); }},
         {PossibleState::showTasks,[]{return new ShowTasks(); }},
-        {PossibleState::editTask,[]{return new EditTask();}},
-        {PossibleState::removeTask,[]{return new RemoveTask();}},
-        {PossibleState::terminate,[]{return new Terminate();}}
+        {PossibleState::editTask,[]{return new EditTask();}}
+        // {PossibleState::removeTask,[]{return new RemoveTask();}},
+        // {PossibleState::terminate,[]{return new Terminate();}}
     };
 };

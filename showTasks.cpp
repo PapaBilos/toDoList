@@ -1,22 +1,22 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "showTasks.h"
 
-#include"config.h"
-#include"showTasks.h"
 
 void ShowTasks::execute() {
-	Config config;
 	system("cls");
 	std::cout << "Showing task(s)" << std::endl;
-	
+
+	std::string taskFileName = "tasks.txt";
 	std::string taskFileLine;
 	std::ifstream taskFile;
-	taskFile.open(config.tasksFileName);
+	taskFile.open(taskFileName);
 
 	int taskNumber = 1;
 	if (taskFile.is_open()) {
-		while (std::getline(taskFile, taskFileLine)) {
+		while (taskFile.peek() != EOF) {
+			std::getline(taskFile, taskFileLine);
 			std::cout << taskNumber << "\t" << taskFileLine << std::endl;
 			taskNumber++;
 		}
