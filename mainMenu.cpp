@@ -1,6 +1,6 @@
+#include <iostream>
 #include "mainMenu.h"
 #include "state.h"
-#include <iostream>
 
 void MainMenu::execute() {
     const std::string version = "v. UGA_BUGA";

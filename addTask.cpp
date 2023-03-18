@@ -2,23 +2,24 @@
 #include<fstream>
 #include<string>
 
-#include "addTask.h"
-#include "state.h"
+#include"config.h"
+#include"addTask.h"
+#include"state.h"
 
 void AddTask::execute() {
+	std::string taskName;
+	std::ofstream taskFile;
+	Config config;
+
 	system("cls");
 	std::cout << "Adding task\n";
 
-	std::string taskFileName = "tasks.txt";
-	std::string taskName;
-	std::ofstream taskFile;
-	taskFile.open(taskFileName, std::ofstream::app);
+	taskFile.open(config.tasksFileName, std::ofstream::app);
 	if(taskFile.is_open()){
-		std::cout << "Enter noew task: ";
+		std::cout << "Enter new task: ";
 		std::cin.ignore();
 		std::getline(std::cin, taskName);
 		taskFile << taskName << "\n";
-		
 	}
 	else {
 		std::cout << "ERROR::addTask::execute::FILE_IS_NOT_OPEN" << std::endl;

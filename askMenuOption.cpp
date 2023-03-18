@@ -1,12 +1,13 @@
-#pragma once
-#include <iostream>
-#include <map>
+#include<iostream>
+#include<map>
 
-#include "askMenuOption.h"
+#include"askMenuOption.h"
 
 void AskMenuOption::nextStateSelection() {
-	std::cout << "Choose option: ";
 	int inputOption;
+	int* input_ptr;
+	input_ptr = &inputOption;
+	std::cout << "Choose option: ";
 	std::cin >> inputOption;
 	std::map<int, PossibleState> nextStateMap{
 		{1, PossibleState::addTask},
@@ -15,7 +16,13 @@ void AskMenuOption::nextStateSelection() {
 		{4, PossibleState::removeTask},
 		{5, PossibleState::terminate}
 	};
-	AskMenuOption::nextState = nextStateMap.at(inputOption);
+	if(!nextStateMap.count(inputOption)){
+		std::cout << "Number out of bound!" << std::endl;
+		AskMenuOption::nextState = PossibleState::askMenuOption;
+	}
+	else {
+		AskMenuOption::nextState = nextStateMap.at(*input_ptr);
+	}
 }
 
 void AskMenuOption::execute() {

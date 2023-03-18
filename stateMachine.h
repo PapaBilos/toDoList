@@ -1,5 +1,4 @@
 #pragma once
-
 #include"state.h"
 #include"mainMenu.h"
 #include"addTask.h"

@@ -6,7 +6,6 @@ void Terminate::execute() {
 PossibleState Terminate::leave() {
 	return PossibleState::mainMenu;
 }
-
 void Terminate::shutdown() {
 	exit(0);
 }
